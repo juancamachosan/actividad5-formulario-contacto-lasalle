@@ -77,13 +77,20 @@ def render_page(config, values=None, errors=None, success=False) -> str:
     <section class="card">
       <h2>Enviar mensaje</h2>
       <form method="post" action="/" novalidate>
-        <label>Nombre completo <input type="text" name="nombre" value="{val('nombre')}" required></label>
+        <label for="nombre">Nombre completo</label>
+        <input id="nombre" type="text" name="nombre" value="{val('nombre')}" autocomplete="name" required>
         {err('nombre')}
-        <label>Correo electrónico <input type="email" name="correo" value="{val('correo')}" required></label>
+
+        <label for="correo">Correo electrónico</label>
+        <input id="correo" type="email" name="correo" value="{val('correo')}" autocomplete="email" required>
         {err('correo')}
-        <label>Asunto <input type="text" name="asunto" value="{val('asunto')}" required></label>
+
+        <label for="asunto">Asunto</label>
+        <input id="asunto" type="text" name="asunto" value="{val('asunto')}" autocomplete="off" required>
         {err('asunto')}
-        <label>Mensaje <textarea name="mensaje" rows="5" required>{html.escape(values.get('mensaje', ''))}</textarea></label>
+
+        <label for="mensaje">Mensaje</label>
+        <textarea id="mensaje" name="mensaje" rows="5" required>{html.escape(values.get('mensaje', ''))}</textarea>
         {err('mensaje')}
         <button type="submit">Enviar formulario</button>
       </form>

@@ -11,18 +11,13 @@ from urllib.parse import parse_qs
 
 from contact_app.database import init_db, save_contact
 from contact_app.settings import get_config
-from contact_app.validators import validate_contact
+from contact_app.validators import MAX_LENGTHS, normalize_contact, validate_contact
 
 
 def process_form(form_data: dict[str, str], env: str | None = None) -> tuple[bool, dict[str, str], dict[str, str]]:
     """Valida y almacena un contacto. Retorna (ok, errors, clean_data)."""
     config = get_config(env)
-    clean_data = {
-        "nombre": (form_data.get("nombre") or "").strip(),
-        "correo": (form_data.get("correo") or "").strip(),
-        "asunto": (form_data.get("asunto") or "").strip(),
-        "mensaje": (form_data.get("mensaje") or "").strip(),
-    }
+    clean_data = normalize_contact(form_data)
     errors = validate_contact(clean_data)
     if errors:
         return False, errors, clean_data
@@ -77,13 +72,13 @@ def render_page(config, values=None, errors=None, success=False) -> str:
     <section class="card">
       <h2>Enviar mensaje</h2>
       <form method="post" action="/" novalidate>
-        <label>Nombre completo <input type="text" name="nombre" value="{val('nombre')}" required></label>
+        <label>Nombre completo <input type="text" name="nombre" value="{val('nombre')}" maxlength="{MAX_LENGTHS['nombre']}" required></label>
         {err('nombre')}
-        <label>Correo electrónico <input type="email" name="correo" value="{val('correo')}" required></label>
+        <label>Correo electrónico <input type="email" name="correo" value="{val('correo')}" maxlength="{MAX_LENGTHS['correo']}" required></label>
         {err('correo')}
-        <label>Asunto <input type="text" name="asunto" value="{val('asunto')}" required></label>
+        <label>Asunto <input type="text" name="asunto" value="{val('asunto')}" maxlength="{MAX_LENGTHS['asunto']}" required></label>
         {err('asunto')}
-        <label>Mensaje <textarea name="mensaje" rows="5" required>{html.escape(values.get('mensaje', ''))}</textarea></label>
+        <label>Mensaje <textarea name="mensaje" rows="5" maxlength="{MAX_LENGTHS['mensaje']}" required>{html.escape(values.get('mensaje', ''))}</textarea></label>
         {err('mensaje')}
         <button type="submit">Enviar formulario</button>
       </form>

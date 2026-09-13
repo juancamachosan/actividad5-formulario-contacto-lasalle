@@ -11,18 +11,13 @@ from urllib.parse import parse_qs
 
 from contact_app.database import init_db, save_contact
 from contact_app.settings import get_config
-from contact_app.validators import validate_contact
+from contact_app.validators import normalize_contact, validate_contact
 
 
 def process_form(form_data: dict[str, str], env: str | None = None) -> tuple[bool, dict[str, str], dict[str, str]]:
     """Valida y almacena un contacto. Retorna (ok, errors, clean_data)."""
     config = get_config(env)
-    clean_data = {
-        "nombre": (form_data.get("nombre") or "").strip(),
-        "correo": (form_data.get("correo") or "").strip(),
-        "asunto": (form_data.get("asunto") or "").strip(),
-        "mensaje": (form_data.get("mensaje") or "").strip(),
-    }
+    clean_data = normalize_contact(form_data)
     errors = validate_contact(clean_data)
     if errors:
         return False, errors, clean_data

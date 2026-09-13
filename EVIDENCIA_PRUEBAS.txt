@@ -1,2 +1,6 @@
-...                                                                      [100%]
-3 passed in 0.15s
+﻿Actividad 5 - Formulario de contacto La Salle
+Validación automatizada final
+Comando: py -m pytest -q
+Resultado: 8 passed
+Ambiente: testing
+Conclusión: la versión integrada supera todos los casos automatizados definidos.

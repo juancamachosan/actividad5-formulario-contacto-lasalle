@@ -7,25 +7,30 @@ import html
 import logging
 import os
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
 from urllib.parse import parse_qs
 
 from contact_app.database import init_db, save_contact
 from contact_app.settings import get_config
-from contact_app.validators import validate_contact
+from contact_app.validators import MAX_LENGTHS, normalize_contact, validate_contact
+
+ROOT = Path(__file__).resolve().parent
 
 
-def process_form(form_data: dict[str, str], env: str | None = None) -> tuple[bool, dict[str, str], dict[str, str]]:
-    """Valida y almacena un contacto. Retorna (ok, errors, clean_data)."""
+def process_form(
+    form_data: dict[str, str], env: str | None = None
+) -> tuple[bool, dict[str, str], dict[str, str]]:
+    """Normaliza, valida y almacena un contacto.
+
+    Retorna una tupla ``(ok, errors, clean_data)``. La base de datos solo se
+    inicializa cuando la entrada supera todas las validaciones.
+    """
     config = get_config(env)
-    clean_data = {
-        "nombre": (form_data.get("nombre") or "").strip(),
-        "correo": (form_data.get("correo") or "").strip(),
-        "asunto": (form_data.get("asunto") or "").strip(),
-        "mensaje": (form_data.get("mensaje") or "").strip(),
-    }
+    clean_data = normalize_contact(form_data)
     errors = validate_contact(clean_data)
     if errors:
         return False, errors, clean_data
+
     init_db(config.db_path)
     save_contact(config.db_path, clean_data, config.env)
     return True, {}, clean_data
@@ -34,6 +39,7 @@ def process_form(form_data: dict[str, str], env: str | None = None) -> tuple[boo
 def render_page(config, values=None, errors=None, success=False) -> str:
     values = values or {"nombre": "", "correo": "", "asunto": "", "mensaje": ""}
     errors = errors or {}
+
     debug_block = ""
     if config.debug:
         debug_block = (
@@ -44,12 +50,22 @@ def render_page(config, values=None, errors=None, success=False) -> str:
             f'Datos identificables: {html.escape(config.data_label)}'
             '</section>'
         )
+
     success_html = ""
     if success:
-        success_html = '<div class="alert success" role="status">Formulario procesado correctamente. La información fue almacenada.</div>'
+        success_html = (
+            '<div class="alert success" role="status">'
+            'Formulario procesado correctamente. La información fue almacenada.'
+            '</div>'
+        )
 
     def err(field: str) -> str:
-        return f'<small class="error" id="error-{field}" role="alert">{html.escape(errors.get(field, ""))}</small>' if errors.get(field) else ""
+        if not errors.get(field):
+            return ""
+        return (
+            f'<small class="error" id="error-{field}" role="alert">'
+            f'{html.escape(errors[field])}</small>'
+        )
 
     def val(field: str) -> str:
         return html.escape(values.get(field, ""), quote=True)
@@ -83,20 +99,21 @@ def render_page(config, values=None, errors=None, success=False) -> str:
       <h2>Enviar mensaje</h2>
       <form method="post" action="/" novalidate>
         <label for="nombre">Nombre completo</label>
-        <input id="nombre" type="text" name="nombre" value="{val('nombre')}" autocomplete="name" required{aria('nombre')}>
+        <input id="nombre" type="text" name="nombre" value="{val('nombre')}" maxlength="{MAX_LENGTHS['nombre']}" autocomplete="name" required{aria('nombre')}>
         {err('nombre')}
 
         <label for="correo">Correo electrónico</label>
-        <input id="correo" type="email" name="correo" value="{val('correo')}" autocomplete="email" required{aria('correo')}>
+        <input id="correo" type="email" name="correo" value="{val('correo')}" maxlength="{MAX_LENGTHS['correo']}" autocomplete="email" required{aria('correo')}>
         {err('correo')}
 
         <label for="asunto">Asunto</label>
-        <input id="asunto" type="text" name="asunto" value="{val('asunto')}" autocomplete="off" required{aria('asunto')}>
+        <input id="asunto" type="text" name="asunto" value="{val('asunto')}" maxlength="{MAX_LENGTHS['asunto']}" autocomplete="off" required{aria('asunto')}>
         {err('asunto')}
 
         <label for="mensaje">Mensaje</label>
-        <textarea id="mensaje" name="mensaje" rows="5" required{aria('mensaje')}>{html.escape(values.get('mensaje', ''))}</textarea>
+        <textarea id="mensaje" name="mensaje" rows="5" maxlength="{MAX_LENGTHS['mensaje']}" required{aria('mensaje')}>{html.escape(values.get('mensaje', ''))}</textarea>
         {err('mensaje')}
+
         <button type="submit">Enviar formulario</button>
       </form>
     </section>
@@ -121,46 +138,73 @@ class ContactHandler(BaseHTTPRequestHandler):
         self.wfile.write(html_text.encode("utf-8"))
 
     def do_GET(self):
-        if self.path.startswith("/static/styles.css"):
-            css = open(os.path.join(os.path.dirname(__file__), "static", "styles.css"), encoding="utf-8").read()
+        if self.path == "/static/styles.css":
+            css_path = ROOT / "static" / "styles.css"
+            css = css_path.read_text(encoding="utf-8")
             self.send_response(200)
             self.send_header("Content-Type", "text/css; charset=utf-8")
+            self.send_header("X-Content-Type-Options", "nosniff")
             self.end_headers()
             self.wfile.write(css.encode("utf-8"))
             return
+
         if self.path != "/":
             self.send_error(404)
             return
+
         self._send_html(render_page(self.config))
 
     def do_POST(self):
         if self.path != "/":
             self.send_error(404)
             return
-        length = int(self.headers.get("Content-Length", 0))
+
+        try:
+            length = int(self.headers.get("Content-Length", 0))
+        except ValueError:
+            self.send_error(400, "Content-Length inválido")
+            return
+
         body = self.rfile.read(length).decode("utf-8")
-        raw = {k: v[0] for k, v in parse_qs(body).items()}
+        raw = {key: values[0] for key, values in parse_qs(body, keep_blank_values=True).items()}
         ok, errors, clean = process_form(raw, self.config.env)
+
         if ok:
             logging.info("Contacto almacenado en ambiente %s", self.config.env)
             self._send_html(render_page(self.config, success=True))
         else:
-            self._send_html(render_page(self.config, values=clean, errors=errors), status=400)
+            self._send_html(
+                render_page(self.config, values=clean, errors=errors),
+                status=400,
+            )
 
 
 def main():
     parser = argparse.ArgumentParser(description="Ejecuta Formulario de contacto La Salle")
-    parser.add_argument("--env", choices=["development", "testing", "production"], default=os.getenv("APP_ENV", "development"))
+    parser.add_argument(
+        "--env",
+        choices=["development", "testing", "production"],
+        default=os.getenv("APP_ENV", "development"),
+    )
     parser.add_argument("--host", default=os.getenv("APP_HOST", "127.0.0.1"))
-    parser.add_argument("--port", type=int, default=int(os.getenv("PORT", os.getenv("APP_PORT", "8000"))))
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=int(os.getenv("PORT", os.getenv("APP_PORT", "8000"))),
+    )
     args = parser.parse_args()
+
     config = get_config(args.env)
     level = logging.DEBUG if config.debug else logging.WARNING
     logging.basicConfig(level=level, format="[%(levelname)s] %(message)s")
     init_db(config.db_path)
+
     ContactHandler.config = config
     server = ThreadingHTTPServer((args.host, args.port), ContactHandler)
-    print(f"Formulario La Salle ejecutándose en http://{args.host}:{args.port} | ambiente={config.env} | debug={config.debug}")
+    print(
+        f"Formulario La Salle ejecutándose en http://{args.host}:{args.port} "
+        f"| ambiente={config.env} | debug={config.debug}"
+    )
     server.serve_forever()
 
 

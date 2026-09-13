@@ -1,66 +1,83 @@
-# Formulario de contacto La Salle
+# Formulario de contacto La Salle - Actividad 5
 
-Aplicación web académica para demostrar la ejecución controlada de una misma solución en tres ambientes: desarrollo, pruebas y producción/demostración.
+Proyecto académico de Ingeniería de Software que toma como base el **Formulario de contacto La Salle** de la Actividad 4 y lo gestiona mediante un flujo verificable de Git y GitHub.
+
+## Integrante
+
+- **Juan Andrés Camacho**
+- Modalidad: **individual**
+- GitHub: `juancamachosan`
 
 ## Tecnologías
 
 - Python 3.10 o superior
-- Librería estándar de Python: `http.server`, `sqlite3`
-- HTML5, CSS3
-- SQLite como almacenamiento local independiente por ambiente
+- Librería estándar: `http.server`, `sqlite3`
+- HTML5 y CSS3
+- SQLite por ambiente
+- `pytest` para pruebas automatizadas
+- Git y GitHub para control de versiones
+
+## Estructura
+
+```text
+.
+├── app.py
+├── contact_app/
+├── static/
+├── tests/
+├── instance/
+├── .env.example
+├── .gitignore
+├── requirements.txt
+├── Procfile
+└── runtime.txt
+```
+
+## Instalación
+
+```bash
+python -m venv .venv
+python -m pip install -r requirements.txt
+```
+
+En Windows PowerShell, activar con:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
 
 ## Configuración
 
-Copiar el archivo de ejemplo si se desea usar variables de entorno:
+`.env.example` contiene únicamente valores de ejemplo. No se deben versionar archivos `.env`, contraseñas, tokens, claves privadas ni bases de datos locales.
 
-```bash
-cp .env.example .env
-```
+## Ejecución
 
-No se incluyen contraseñas, tokens ni claves secretas.
-
-## Ejecutar en ambiente de desarrollo
+Desarrollo:
 
 ```bash
 python app.py --env development --port 8000
 ```
 
-Abrir: `http://127.0.0.1:8000`
-
-Depuración habilitada, registros activos y base de datos `instance/contactos_development.db`.
-
-## Ejecutar en ambiente de pruebas
+Pruebas:
 
 ```bash
 python app.py --env testing --port 8001
 ```
 
-Abrir: `http://127.0.0.1:8001`
-
-Depuración habilitada para validar errores, datos identificables de prueba y base de datos `instance/contactos_testing.db`.
-
-## Ejecutar pruebas automatizadas
-
-```bash
-python -m pytest -q
-```
-
-Casos cubiertos: envío correcto, campo obligatorio vacío y correo inválido.
-
-## Ejecutar en producción/demostración local
+Producción/demostración local:
 
 ```bash
 python app.py --env production --host 0.0.0.0 --port 8002
 ```
 
-Depuración deshabilitada y base de datos `instance/contactos_production.db`.
-
-## Despliegue gratuito sugerido
-
-Puede publicarse en Render, Railway, Replit o PythonAnywhere. Para Render, crear un Web Service, conectar el repositorio y usar:
+## Pruebas automatizadas
 
 ```bash
-python app.py --env production --host 0.0.0.0 --port $PORT
+python -m pytest -q
 ```
 
-El archivo `Procfile` ya contiene el comando recomendado.
+La versión base conserva los tres casos de la Actividad 4: envío correcto, campo obligatorio vacío y correo inválido. La ampliación de cobertura se integra en una rama específica de pruebas.
+
+## Flujo de trabajo
+
+Los cambios de esta actividad se gestionan mediante issues, ramas y pull requests. La evidencia del conflicto controlado y de la validación final se incorporará en `docs/` durante el flujo de integración.

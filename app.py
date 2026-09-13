@@ -46,13 +46,18 @@ def render_page(config, values=None, errors=None, success=False) -> str:
         )
     success_html = ""
     if success:
-        success_html = '<div class="alert success">Formulario procesado correctamente. La información fue almacenada.</div>'
+        success_html = '<div class="alert success" role="status">Formulario procesado correctamente. La información fue almacenada.</div>'
 
     def err(field: str) -> str:
-        return f'<small class="error">{html.escape(errors.get(field, ""))}</small>' if errors.get(field) else ""
+        return f'<small class="error" id="error-{field}" role="alert">{html.escape(errors.get(field, ""))}</small>' if errors.get(field) else ""
 
     def val(field: str) -> str:
         return html.escape(values.get(field, ""), quote=True)
+
+    def aria(field: str) -> str:
+        if errors.get(field):
+            return f' aria-invalid="true" aria-describedby="error-{field}"'
+        return ""
 
     return f'''<!doctype html>
 <html lang="es">
@@ -78,19 +83,19 @@ def render_page(config, values=None, errors=None, success=False) -> str:
       <h2>Enviar mensaje</h2>
       <form method="post" action="/" novalidate>
         <label for="nombre">Nombre completo</label>
-        <input id="nombre" type="text" name="nombre" value="{val('nombre')}" autocomplete="name" required>
+        <input id="nombre" type="text" name="nombre" value="{val('nombre')}" autocomplete="name" required{aria('nombre')}>
         {err('nombre')}
 
         <label for="correo">Correo electrónico</label>
-        <input id="correo" type="email" name="correo" value="{val('correo')}" autocomplete="email" required>
+        <input id="correo" type="email" name="correo" value="{val('correo')}" autocomplete="email" required{aria('correo')}>
         {err('correo')}
 
         <label for="asunto">Asunto</label>
-        <input id="asunto" type="text" name="asunto" value="{val('asunto')}" autocomplete="off" required>
+        <input id="asunto" type="text" name="asunto" value="{val('asunto')}" autocomplete="off" required{aria('asunto')}>
         {err('asunto')}
 
         <label for="mensaje">Mensaje</label>
-        <textarea id="mensaje" name="mensaje" rows="5" required>{html.escape(values.get('mensaje', ''))}</textarea>
+        <textarea id="mensaje" name="mensaje" rows="5" required{aria('mensaje')}>{html.escape(values.get('mensaje', ''))}</textarea>
         {err('mensaje')}
         <button type="submit">Enviar formulario</button>
       </form>
@@ -110,6 +115,8 @@ class ContactHandler(BaseHTTPRequestHandler):
     def _send_html(self, html_text: str, status=200):
         self.send_response(status)
         self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("Referrer-Policy", "no-referrer")
         self.end_headers()
         self.wfile.write(html_text.encode("utf-8"))
 

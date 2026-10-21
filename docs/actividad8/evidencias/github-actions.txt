@@ -1,0 +1,28 @@
+GitHub Actions: ejecución independiente de las pruebas
+Repositorio: https://github.com/juancamachosan/actividad5-formulario-contacto-lasalle
+Rama: test/actividad8
+Commit probado: 9e8ccab11d1bcb1e632bb4443bdc3ab733f8e191
+Run: https://github.com/juancamachosan/actividad5-formulario-contacto-lasalle/actions/runs/39528562199
+Job: 118988868643
+Conclusión de ejecución y job: success
+
+Extracto literal del registro del paso Ejecutar pruebas:
+2026-10-21T01:39:38.5727469Z collecting ... collected 14 items
+2026-10-21T01:39:38.5727867Z 
+2026-10-21T01:39:38.5796322Z tests/actividad8/test_actividad8.py::test_U01_nombre_solo_espacios PASSED [  7%]
+2026-10-21T01:39:38.5807027Z tests/actividad8/test_actividad8.py::test_U02_limite_mensaje_2000_2001 PASSED [ 14%]
+2026-10-21T01:39:38.5866236Z tests/actividad8/test_actividad8.py::test_I01_envio_valido_persistencia_normalizada PASSED [ 21%]
+2026-10-21T01:39:38.5903029Z tests/actividad8/test_actividad8.py::test_I02_correo_invalido_no_modifica_base PASSED [ 28%]
+2026-10-21T01:39:40.1701651Z tests/actividad8/test_actividad8.py::test_S01_envio_valido_desde_navegador PASSED [ 35%]
+2026-10-21T01:39:41.4704796Z tests/actividad8/test_actividad8.py::test_S02_error_correo_conserva_datos PASSED [ 42%]
+2026-10-21T01:39:41.4741816Z tests/test_formulario.py::test_envio_correcto_del_formulario PASSED      [ 50%]
+2026-10-21T01:39:41.4750125Z tests/test_formulario.py::test_campo_obligatorio_vacio PASSED            [ 57%]
+2026-10-21T01:39:41.4758192Z tests/test_formulario.py::test_correo_invalido PASSED                    [ 64%]
+2026-10-21T01:39:41.4791666Z tests/test_formulario.py::test_normaliza_espacios_laterales PASSED       [ 71%]
+2026-10-21T01:39:41.4799747Z tests/test_formulario.py::test_rechaza_campo_compuesto_solo_por_espacios PASSED [ 78%]
+2026-10-21T01:39:41.4808361Z tests/test_formulario.py::test_rechaza_nombre_que_supera_longitud_maxima PASSED [ 85%]
+2026-10-21T01:39:41.4816339Z tests/test_formulario.py::test_rechaza_mensaje_que_supera_longitud_maxima PASSED [ 92%]
+2026-10-21T01:39:41.5066160Z tests/test_formulario.py::test_ambientes_usan_configuraciones_independientes PASSED [100%]
+2026-10-21T01:39:41.5066939Z 
+2026-10-21T01:39:41.5069627Z - generated xml file: /home/runner/work/actividad5-formulario-contacto-lasalle/actividad5-formulario-contacto-lasalle/docs/actividad8/evidencias/junit.xml -
+2026-10-21T01:39:41.5071209Z ============================== 14 passed in 2.97s ==============================

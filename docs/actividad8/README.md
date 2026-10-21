@@ -73,3 +73,7 @@ El workflow del repositorio se amplió para instalar Node.js, Playwright y Chrom
 6. Enunciado y rúbrica de la Actividad 8 aportados por el estudiante, octubre de 2026.
 
 Consulta de documentación: 20 de octubre de 2026, America/Bogota.
+
+## Verificación adicional en GitHub Actions
+
+La ejecución independiente del commit `9e8ccab11d1bcb1e632bb4443bdc3ab733f8e191` finalizó con **success**. Las **14 pruebas** pasaron también en el runner de GitHub, después de instalar el navegador mediante el flujo normal de Playwright. [Abrir ejecución](https://github.com/juancamachosan/actividad5-formulario-contacto-lasalle/actions/runs/39528562199). Se conserva un [extracto literal del registro](evidencias/github-actions.txt).

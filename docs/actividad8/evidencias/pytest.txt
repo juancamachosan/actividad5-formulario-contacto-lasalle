@@ -1,0 +1,23 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-8.4.2, pluggy-1.7.0 -- /workspace/scratch/5e4a215f9151/formulario-lasalle/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /workspace/scratch/5e4a215f9151/formulario-lasalle
+collecting ... collected 14 items
+
+tests/actividad8/test_actividad8.py::test_U01_nombre_solo_espacios PASSED [  7%]
+tests/actividad8/test_actividad8.py::test_U02_limite_mensaje_2000_2001 PASSED [ 14%]
+tests/actividad8/test_actividad8.py::test_I01_envio_valido_persistencia_normalizada PASSED [ 21%]
+tests/actividad8/test_actividad8.py::test_I02_correo_invalido_no_modifica_base PASSED [ 28%]
+tests/actividad8/test_actividad8.py::test_S01_envio_valido_desde_navegador PASSED [ 35%]
+tests/actividad8/test_actividad8.py::test_S02_error_correo_conserva_datos PASSED [ 42%]
+tests/test_formulario.py::test_envio_correcto_del_formulario PASSED      [ 50%]
+tests/test_formulario.py::test_campo_obligatorio_vacio PASSED            [ 57%]
+tests/test_formulario.py::test_correo_invalido PASSED                    [ 64%]
+tests/test_formulario.py::test_normaliza_espacios_laterales PASSED       [ 71%]
+tests/test_formulario.py::test_rechaza_campo_compuesto_solo_por_espacios PASSED [ 78%]
+tests/test_formulario.py::test_rechaza_nombre_que_supera_longitud_maxima PASSED [ 85%]
+tests/test_formulario.py::test_rechaza_mensaje_que_supera_longitud_maxima PASSED [ 92%]
+tests/test_formulario.py::test_ambientes_usan_configuraciones_independientes PASSED [100%]
+
+- generated xml file: /workspace/scratch/5e4a215f9151/formulario-lasalle/docs/actividad8/evidencias/junit.xml -
+============================== 14 passed in 3.31s ==============================

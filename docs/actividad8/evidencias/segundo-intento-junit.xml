@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="14" time="1.085" timestamp="2026-10-20T20:26:26.034326-05:00" hostname="64ce830273ba"><testcase classname="tests.actividad8.test_actividad8" name="test_U01_nombre_solo_espacios" time="0.001" /><testcase classname="tests.actividad8.test_actividad8" name="test_U02_limite_mensaje_2000_2001" time="0.001" /><testcase classname="tests.actividad8.test_actividad8" name="test_I01_envio_valido_persistencia_normalizada" time="0.008" /><testcase classname="tests.actividad8.test_actividad8" name="test_I02_correo_invalido_no_modifica_base" time="0.009" /><testcase classname="tests.actividad8.test_actividad8" name="test_S01_envio_valido_desde_navegador" time="0.499"><failure message="AssertionError: node:internal/modules/run_main:107&#10;      triggerUncaughtException(&#10;      ^&#10;  &#10;  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium-1234/chrome-linux64/chrome&#10;  ╔════════════════════════════════════════════════════════════╗&#10;  ║ Looks like Playwright was just installed or updated.       ║&#10;  ║ Please run the following command to download new browsers: ║&#10;  ║                                                            ║&#10;  ║     npx playwright install                                 ║&#10;  ║                                                            ║&#10;  ║ &lt;3 Playwright Team                                         ║&#10;  ╚════════════════════════════════════════════════════════════╝&#10;      at /workspace/scratch/5e4a215f9151/formulario-lasalle/tests/actividad8/browser.mjs:18:32 {&#10;    log: [],&#10;    name: 'Error'&#10;  }&#10;  &#10;  Node.js v24.19.0&#10;  &#10;assert 1 == 0&#10; +  where 1 = CompletedProcess(args=['/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node', '/workspace/scratch/5e4a215f9151/formulario-lasalle/tests/actividad8/browser.mjs', 'S01', 'http://127.0.0.1:40687'], returncode=1, stdout='', stderr=&quot;node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nbrowserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium-1234/chrome-linux64/chrome\n\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551 Looks like Playwright was just installed or updated.       \u2551\n\u2551 Please run the following command to download new browsers: \u2551\n\u2551                                                            \u2551\n\u2551     npx playwright install                                 \u2551\n\u2551                                                            \u2551\n\u2551 &lt;3 Playwright Team                                         \u2551\n\u255a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255d\n    at /workspace/scratch/5e4a215f9151/formulario-lasalle/tests/actividad8/browser.mjs:18:32 {\n  log: [],\n  name: 'Error'\n}\n\nNode.js v24.19.0\n&quot;).returncode">live_server = ('http://127.0.0.1:40687', Config(env='testing', debug=True, db_path='/tmp/pytest-of-root/pytest-1/test_S01_envio_valido_desde_na0/contactos_testing.db', data_label='Datos de prueba: TEST-LASALLE-001'))
+
+    def test_S01_envio_valido_desde_navegador(live_server):
+&gt;       run_browser("S01", live_server)
+
+tests/actividad8/test_actividad8.py:128: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+case_id = 'S01'
+live_server = ('http://127.0.0.1:40687', Config(env='testing', debug=True, db_path='/tmp/pytest-of-root/pytest-1/test_S01_envio_valido_desde_na0/contactos_testing.db', data_label='Datos de prueba: TEST-LASALLE-001'))
+
+    def run_browser(case_id, live_server):
+        url, config = live_server
+        node = os.getenv("A8_NODE") or shutil.which("node")
+        assert node, "Instale Node.js para ejecutar los dos casos funcionales."
+        result = subprocess.run(
+            [node, str(ROOT / "tests/actividad8/browser.mjs"), case_id, url],
+            cwd=ROOT, capture_output=True, text=True, timeout=90,
+        )
+&gt;       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: node:internal/modules/run_main:107
+E             triggerUncaughtException(
+E             ^
+E         
+E         browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium-1234/chrome-linux64/chrome
+E         ╔════════════════════════════════════════════════════════════╗
+E         ║ Looks like Playwright was just installed or updated.       ║
+E         ║ Please run the following command to download new browsers: ║
+E         ║                                                            ║
+E         ║     npx playwright install                                 ║
+E         ║                                                            ║
+E         ║ &lt;3 Playwright Team                                         ║
+E         ╚════════════════════════════════════════════════════════════╝
+E             at /workspace/scratch/5e4a215f9151/formulario-lasalle/tests/actividad8/browser.mjs:18:32 {
+E           log: [],
+E           name: 'Error'
+E         }
+E         
+E         Node.js v24.19.0
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node', '/workspace/scratch/5e4a215f9151/formulario-lasalle/tests/actividad8/browser.mjs', 'S01', 'http://127.0.0.1:40687'], returncode=1, stdout='', stderr="node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nbrowserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium-1234/chrome-linux64/chrome\n\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551 Looks like Playwright was just installed or updated.       \u2551\n\u2551 Please run the following command to download new browsers: \u2551\n\u2551                                                            \u2551\n\u2551     npx playwright install                                 \u2551\n\u2551                                                            \u2551\n\u2551 &lt;3 Playwright Team                                         \u2551\n\u255a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255d\n    at /workspace/scratch/5e4a215f9151/formulario-lasalle/tests/actividad8/browser.mjs:18:32 {\n  log: [],\n  name: 'Error'\n}\n\nNode.js v24.19.0\n").returncode
+
+tests/actividad8/test_actividad8.py:119: AssertionError</failure></testcase><testcase classname="tests.actividad8.test_actividad8" name="test_S02_error_correo_conserva_datos" time="0.501"><failure message="AssertionError: node:internal/modules/run_main:107&#10;      triggerUncaughtException(&#10;      ^&#10;  &#10;  browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium-1234/chrome-linux64/chrome&#10;  ╔════════════════════════════════════════════════════════════╗&#10;  ║ Looks like Playwright was just installed or updated.       ║&#10;  ║ Please run the following command to download new browsers: ║&#10;  ║                                                            ║&#10;  ║     npx playwright install                                 ║&#10;  ║                                                            ║&#10;  ║ &lt;3 Playwright Team                                         ║&#10;  ╚════════════════════════════════════════════════════════════╝&#10;      at /workspace/scratch/5e4a215f9151/formulario-lasalle/tests/actividad8/browser.mjs:18:32 {&#10;    log: [],&#10;    name: 'Error'&#10;  }&#10;  &#10;  Node.js v24.19.0&#10;  &#10;assert 1 == 0&#10; +  where 1 = CompletedProcess(args=['/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node', '/workspace/scratch/5e4a215f9151/formulario-lasalle/tests/actividad8/browser.mjs', 'S02', 'http://127.0.0.1:42447'], returncode=1, stdout='', stderr=&quot;node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nbrowserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium-1234/chrome-linux64/chrome\n\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551 Looks like Playwright was just installed or updated.       \u2551\n\u2551 Please run the following command to download new browsers: \u2551\n\u2551                                                            \u2551\n\u2551     npx playwright install                                 \u2551\n\u2551                                                            \u2551\n\u2551 &lt;3 Playwright Team                                         \u2551\n\u255a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255d\n    at /workspace/scratch/5e4a215f9151/formulario-lasalle/tests/actividad8/browser.mjs:18:32 {\n  log: [],\n  name: 'Error'\n}\n\nNode.js v24.19.0\n&quot;).returncode">live_server = ('http://127.0.0.1:42447', Config(env='testing', debug=True, db_path='/tmp/pytest-of-root/pytest-1/test_S02_error_correo_conserva0/contactos_testing.db', data_label='Datos de prueba: TEST-LASALLE-001'))
+
+    def test_S02_error_correo_conserva_datos(live_server):
+&gt;       run_browser("S02", live_server)
+
+tests/actividad8/test_actividad8.py:132: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+case_id = 'S02'
+live_server = ('http://127.0.0.1:42447', Config(env='testing', debug=True, db_path='/tmp/pytest-of-root/pytest-1/test_S02_error_correo_conserva0/contactos_testing.db', data_label='Datos de prueba: TEST-LASALLE-001'))
+
+    def run_browser(case_id, live_server):
+        url, config = live_server
+        node = os.getenv("A8_NODE") or shutil.which("node")
+        assert node, "Instale Node.js para ejecutar los dos casos funcionales."
+        result = subprocess.run(
+            [node, str(ROOT / "tests/actividad8/browser.mjs"), case_id, url],
+            cwd=ROOT, capture_output=True, text=True, timeout=90,
+        )
+&gt;       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: node:internal/modules/run_main:107
+E             triggerUncaughtException(
+E             ^
+E         
+E         browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium-1234/chrome-linux64/chrome
+E         ╔════════════════════════════════════════════════════════════╗
+E         ║ Looks like Playwright was just installed or updated.       ║
+E         ║ Please run the following command to download new browsers: ║
+E         ║                                                            ║
+E         ║     npx playwright install                                 ║
+E         ║                                                            ║
+E         ║ &lt;3 Playwright Team                                         ║
+E         ╚════════════════════════════════════════════════════════════╝
+E             at /workspace/scratch/5e4a215f9151/formulario-lasalle/tests/actividad8/browser.mjs:18:32 {
+E           log: [],
+E           name: 'Error'
+E         }
+E         
+E         Node.js v24.19.0
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node', '/workspace/scratch/5e4a215f9151/formulario-lasalle/tests/actividad8/browser.mjs', 'S02', 'http://127.0.0.1:42447'], returncode=1, stdout='', stderr="node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nbrowserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium-1234/chrome-linux64/chrome\n\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551 Looks like Playwright was just installed or updated.       \u2551\n\u2551 Please run the following command to download new browsers: \u2551\n\u2551                                                            \u2551\n\u2551     npx playwright install                                 \u2551\n\u2551                                                            \u2551\n\u2551 &lt;3 Playwright Team                                         \u2551\n\u255a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255d\n    at /workspace/scratch/5e4a215f9151/formulario-lasalle/tests/actividad8/browser.mjs:18:32 {\n  log: [],\n  name: 'Error'\n}\n\nNode.js v24.19.0\n").returncode
+
+tests/actividad8/test_actividad8.py:119: AssertionError</failure></testcase><testcase classname="tests.test_formulario" name="test_envio_correcto_del_formulario" time="0.004" /><testcase classname="tests.test_formulario" name="test_campo_obligatorio_vacio" time="0.000" /><testcase classname="tests.test_formulario" name="test_correo_invalido" time="0.000" /><testcase classname="tests.test_formulario" name="test_normaliza_espacios_laterales" time="0.002" /><testcase classname="tests.test_formulario" name="test_rechaza_campo_compuesto_solo_por_espacios" time="0.000" /><testcase classname="tests.test_formulario" name="test_rechaza_nombre_que_supera_longitud_maxima" time="0.000" /><testcase classname="tests.test_formulario" name="test_rechaza_mensaje_que_supera_longitud_maxima" time="0.000" /><testcase classname="tests.test_formulario" name="test_ambientes_usan_configuraciones_independientes" time="0.000" /></testsuite></testsuites>

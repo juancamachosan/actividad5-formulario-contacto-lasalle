@@ -1,0 +1,9 @@
+{
+  "caso": "U01",
+  "fecha_utc": "2026-10-21T01:29:27.335439+00:00",
+  "observado": {
+    "errores": {
+      "nombre": "El nombre es obligatorio."
+    }
+  }
+}

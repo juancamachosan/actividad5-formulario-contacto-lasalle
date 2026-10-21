@@ -1,0 +1,188 @@
+[
+  {
+    "id": "U01",
+    "nombre": "Nombre compuesto solo por espacios",
+    "nivel": "Unitaria",
+    "objetivo": "Rechazar un nombre sin caracteres útiles.",
+    "requisito": "RF01. Obligatoriedad de los cuatro campos.",
+    "componente": "contact_app.validators.validate_contact",
+    "precondiciones": "Dependencias de Python instaladas. Validar la función en aislamiento, sin servidor ni base de datos.",
+    "entrada": {
+      "nombre": "   ",
+      "correo": "estudiante@example.com",
+      "asunto": "Consulta académica",
+      "mensaje": "Solicito información del programa."
+    },
+    "pasos": [
+      "Construir D0 y reemplazar nombre por tres espacios.",
+      "Invocar validate_contact(entrada).",
+      "Comparar el diccionario completo de errores."
+    ],
+    "esperado": "Exactamente {\"nombre\": \"El nombre es obligatorio.\"}.",
+    "obtenido": "El validador devolvió exactamente el error de obligatoriedad del nombre.",
+    "test": "test_U01_nombre_solo_espacios",
+    "estado": "Aprobado",
+    "segundos": 0.001,
+    "evidencia": [
+      "evidencias/U01.json",
+      "evidencias/junit.xml",
+      "evidencias/pytest.txt"
+    ]
+  },
+  {
+    "id": "U02",
+    "nombre": "Límite del mensaje: 2000 y 2001 caracteres",
+    "nivel": "Unitaria",
+    "objetivo": "Comprobar el límite superior y el primer valor fuera del límite.",
+    "requisito": "RF03. El mensaje admite como máximo 2000 caracteres.",
+    "componente": "contact_app.validators.validate_contact",
+    "precondiciones": "Función en aislamiento. Los otros tres campos contienen los valores válidos de D0.",
+    "entrada": {
+      "base": "D0",
+      "mensaje_1": "M repetida 2000 veces",
+      "mensaje_2": "M repetida 2001 veces"
+    },
+    "pasos": [
+      "Validar D0 con mensaje = \"M\" * 2000.",
+      "Validar D0 con mensaje = \"M\" * 2001.",
+      "Comparar ambos diccionarios de errores."
+    ],
+    "esperado": "2000: {}. 2001: {\"mensaje\": \"El mensaje no puede superar 2000 caracteres.\"}.",
+    "obtenido": "2000 caracteres aceptados y 2001 rechazados con el error esperado.",
+    "test": "test_U02_limite_mensaje_2000_2001",
+    "estado": "Aprobado",
+    "segundos": 0.0,
+    "evidencia": [
+      "evidencias/U02.json",
+      "evidencias/junit.xml",
+      "evidencias/pytest.txt"
+    ]
+  },
+  {
+    "id": "I01",
+    "nombre": "Persistencia del envío válido normalizado",
+    "nivel": "Integración",
+    "objetivo": "Verificar que normalización, validación y SQLite colaboran correctamente.",
+    "requisito": "RF04. Un envío válido guarda una fila normalizada en el ambiente testing.",
+    "componente": "app.process_form + validators + database + SQLite real",
+    "precondiciones": "Fixture isolated_config: ruta SQLite nueva en tmp_path, sin contactos previos. Configuración testing temporal.",
+    "entrada": {
+      "base": "D0",
+      "transformacion": "Agregar dos espacios al principio y al final de cada campo."
+    },
+    "pasos": [
+      "Construir la entrada con espacios laterales.",
+      "Ejecutar process_form(entrada, \"testing\").",
+      "Consultar los cuatro campos y ambiente de todas las filas de SQLite.",
+      "Comparar el retorno y la fila completa con D0."
+    ],
+    "esperado": "Retorno (True, {}, D0). Exactamente una fila, igual a D0 y ambiente = testing.",
+    "obtenido": "Retorno correcto y una única fila normalizada, con los cuatro valores íntegros y ambiente testing.",
+    "test": "test_I01_envio_valido_persistencia_normalizada",
+    "estado": "Aprobado",
+    "segundos": 0.006,
+    "evidencia": [
+      "evidencias/I01.json",
+      "evidencias/junit.xml",
+      "evidencias/pytest.txt"
+    ]
+  },
+  {
+    "id": "I02",
+    "nombre": "Correo inválido sin modificación de la base",
+    "nivel": "Integración",
+    "objetivo": "Evitar que una entrada rechazada se almacene o altere contactos existentes.",
+    "requisito": "RF02. Formato de correo. RF04. Solo se guardan entradas válidas.",
+    "componente": "app.process_form + validators + SQLite real",
+    "precondiciones": "Base temporal de testing. Crear un contacto válido con D0 antes de ejecutar el intento inválido.",
+    "entrada": {
+      "nombre": "Estudiante Prueba",
+      "correo": "correo-invalido",
+      "asunto": "Consulta académica",
+      "mensaje": "Solicito información del programa."
+    },
+    "pasos": [
+      "Insertar D0 y guardar el conjunto de filas como antes.",
+      "Ejecutar process_form(entrada, \"testing\") con correo inválido.",
+      "Consultar de nuevo las filas como después.",
+      "Comparar retorno, error y conjuntos completos de filas."
+    ],
+    "esperado": "ok=False y error de correo. Antes = después, con una fila y sin alteraciones.",
+    "obtenido": "El correo produjo el error esperado. La fila previa permaneció idéntica y no se insertaron filas nuevas.",
+    "test": "test_I02_correo_invalido_no_modifica_base",
+    "estado": "Aprobado",
+    "segundos": 0.005,
+    "evidencia": [
+      "evidencias/I02.json",
+      "evidencias/junit.xml",
+      "evidencias/pytest.txt"
+    ]
+  },
+  {
+    "id": "S01",
+    "nombre": "Envío válido desde el navegador",
+    "nivel": "Sistema funcional",
+    "objetivo": "Validar el recorrido completo de envío mediante la interfaz real.",
+    "requisito": "RF04. Persistencia. RF05. Confirmación visible del envío válido.",
+    "componente": "Navegador + formulario HTML + HTTP POST + Python + SQLite",
+    "precondiciones": "Servidor real local en puerto libre, ambiente testing con SQLite temporal vacía. Playwright y Chromium instalados. Viewport 1280 × 1000.",
+    "entrada": {
+      "nombre": "Estudiante Prueba",
+      "correo": "estudiante@example.com",
+      "asunto": "Consulta académica",
+      "mensaje": "Solicito información del programa."
+    },
+    "pasos": [
+      "Abrir la URL del fixture live_server y completar los cuatro campos con D0.",
+      "Pulsar Enviar formulario y esperar la respuesta POST.",
+      "Verificar HTTP 200, texto de confirmación y campos vacíos.",
+      "Consultar SQLite y comparar la única fila con D0 más ambiente testing."
+    ],
+    "esperado": "HTTP 200. Confirmación: Formulario procesado correctamente. La información fue almacenada. Campos vacíos y una fila exacta en SQLite.",
+    "obtenido": "HTTP 200, confirmación exacta, cuatro campos vacíos y una fila con D0 en testing.",
+    "test": "test_S01_envio_valido_desde_navegador",
+    "estado": "Aprobado",
+    "segundos": 1.711,
+    "evidencia": [
+      "evidencias/S01.json",
+      "evidencias/junit.xml",
+      "evidencias/pytest.txt",
+      "evidencias/S01.png",
+      "evidencias/S01.html"
+    ]
+  },
+  {
+    "id": "S02",
+    "nombre": "Error de correo con conservación de datos",
+    "nivel": "Sistema funcional",
+    "objetivo": "Comprobar que el usuario comprende el error y puede corregirlo sin volver a escribir todo.",
+    "requisito": "RF02. Correo válido. RF06. Error visible, datos conservados y ausencia de guardado.",
+    "componente": "Navegador + formulario HTML + HTTP POST + Python + SQLite",
+    "precondiciones": "Servidor real local, ambiente testing con SQLite temporal vacía, Chromium y viewport 1280 × 1000.",
+    "entrada": {
+      "nombre": "Estudiante Prueba",
+      "correo": "correo-invalido",
+      "asunto": "Consulta académica",
+      "mensaje": "Solicito información del programa."
+    },
+    "pasos": [
+      "Abrir el formulario y completar la entrada indicada.",
+      "Pulsar Enviar formulario y esperar la respuesta POST.",
+      "Verificar HTTP 400 y el error Ingrese un correo electrónico válido.",
+      "Verificar aria-invalid=true y aria-describedby=error-correo.",
+      "Comparar los cuatro valores con la entrada. Confirmar ausencia de éxito y cero filas en SQLite."
+    ],
+    "esperado": "HTTP 400, error junto al correo, atributos ARIA correctos, cuatro valores conservados, sin confirmación de éxito y cero filas.",
+    "obtenido": "Todos los resultados esperados coincidieron. La base permaneció vacía.",
+    "test": "test_S02_error_correo_conserva_datos",
+    "estado": "Aprobado",
+    "segundos": 1.55,
+    "evidencia": [
+      "evidencias/S02.json",
+      "evidencias/junit.xml",
+      "evidencias/pytest.txt",
+      "evidencias/S02.png",
+      "evidencias/S02.html"
+    ]
+  }
+]

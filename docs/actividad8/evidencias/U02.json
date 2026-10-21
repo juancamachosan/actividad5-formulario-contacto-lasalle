@@ -1,0 +1,10 @@
+{
+  "caso": "U02",
+  "fecha_utc": "2026-10-21T01:29:27.340138+00:00",
+  "observado": {
+    "errores_2000": {},
+    "errores_2001": {
+      "mensaje": "El mensaje no puede superar 2000 caracteres."
+    }
+  }
+}

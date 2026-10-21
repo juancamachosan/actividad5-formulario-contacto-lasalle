@@ -1,0 +1,6 @@
+{
+  "name": "formulario-lasalle-pruebas-actividad8",
+  "private": true,
+  "description": "Dependencia de navegador para los casos funcionales de Actividad 8",
+  "devDependencies": { "playwright": "1.62.1" }
+}

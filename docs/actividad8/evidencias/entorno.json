@@ -1,0 +1,30 @@
+{
+  "repositorio": "https://github.com/juancamachosan/actividad5-formulario-contacto-lasalle",
+  "rama": "test/actividad8",
+  "commit_base": "37bbf295f0321ae3ba17ca2b1bf9e261dc9e945d",
+  "fecha_bogota": "2026-10-20T20:29:30.245341-05:00",
+  "entorno": {
+    "sistema": "Linux-6.18.55-x86_64-with-glibc2.39",
+    "python": "3.12.14",
+    "pytest": "8.4.2",
+    "node": "24.19.0",
+    "playwright": "1.62.1",
+    "chromium": "153.0.8010.0",
+    "distribucion_chromium": "@sparticuz/chromium 153.0.0",
+    "viewport": "1280x1000"
+  },
+  "casos_actividad": 6,
+  "aprobados_actividad": 6,
+  "pruebas_regresion_previas": 8,
+  "suite_total": 14,
+  "resultado_inicial": "12 passed, 2 failed. Los dos fallos funcionales ocurrieron antes de abrir la aplicación por ausencia del ejecutable del navegador.",
+  "resultado_final": "14 passed in 3.31s",
+  "aplicacion_modificada": false,
+  "archivos_aplicacion_sha256": {
+    "app.py": "b4c5d2a1610f92354fa47b6a2c73c89f0d9aecd245370672f9cc7f5a4511ff21",
+    "contact_app/validators.py": "4ab0e8dcb2a411eb86d2565961c0aa9101381cc42b4922fc8543a38cad4812bc",
+    "contact_app/database.py": "8fdd602c2b9d2cf86ec1185ff18c52b83e55bd19dbe7b3720fbde9aaacf08f48",
+    "contact_app/settings.py": "fe9913b223fcbcf92250c3153713765d762607e6abe2210ad0d72679083b6b5a",
+    "static/styles.css": "0331df4474d0e8f4a6712d596cff221331c377c0d06e0cc51f09528026ec6b7f"
+  }
+}

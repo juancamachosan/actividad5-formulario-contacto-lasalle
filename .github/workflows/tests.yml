@@ -2,7 +2,7 @@
 
 on:
   push:
-    branches: [main]
+    branches: [main, test/actividad8]
   pull_request:
     branches: [main]
 
@@ -19,9 +19,29 @@ jobs:
           python-version: "3.12"
 
       - name: Instalar dependencias
-        run: python -m pip install -r requirements.txt
+        run: python -m pip install -r tests/actividad8/requirements.txt
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Instalar navegador para pruebas funcionales
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium --no-shell
 
       - name: Ejecutar pruebas
         env:
           PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
-        run: python -m pytest -q
+        run: |
+          mkdir -p docs/actividad8/evidencias
+          python -m pytest tests/actividad8 tests/test_formulario.py -vv --junitxml=docs/actividad8/evidencias/junit.xml | tee docs/actividad8/evidencias/pytest.txt
+
+      - name: Conservar resultados y evidencias
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: actividad8-evidencias
+          path: docs/actividad8/evidencias/

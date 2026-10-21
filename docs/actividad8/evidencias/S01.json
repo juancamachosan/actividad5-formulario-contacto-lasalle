@@ -1,0 +1,20 @@
+{
+  "caso": "S01",
+  "fecha_utc": "2026-10-21T01:29:28.936643+00:00",
+  "observado": {
+    "navegador": "153.0.8010.0",
+    "playwright": "1.62.1",
+    "http_status": 200,
+    "confirmacion": "Formulario procesado correctamente. La información fue almacenada.",
+    "campos_vacios": true,
+    "filas": [
+      [
+        "Estudiante Prueba",
+        "estudiante@example.com",
+        "Consulta académica",
+        "Solicito información del programa.",
+        "testing"
+      ]
+    ]
+  }
+}

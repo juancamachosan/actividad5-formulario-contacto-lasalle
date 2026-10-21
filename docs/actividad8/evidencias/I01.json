@@ -1,0 +1,23 @@
+{
+  "caso": "I01",
+  "fecha_utc": "2026-10-21T01:29:27.346099+00:00",
+  "observado": {
+    "ok": true,
+    "errores": {},
+    "datos_limpios": {
+      "nombre": "Estudiante Prueba",
+      "correo": "estudiante@example.com",
+      "asunto": "Consulta académica",
+      "mensaje": "Solicito información del programa."
+    },
+    "filas": [
+      [
+        "Estudiante Prueba",
+        "estudiante@example.com",
+        "Consulta académica",
+        "Solicito información del programa.",
+        "testing"
+      ]
+    ]
+  }
+}

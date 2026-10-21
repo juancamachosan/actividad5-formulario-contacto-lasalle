@@ -1,0 +1,43 @@
+<!DOCTYPE html><html lang="es"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Formulario de contacto La Salle</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body class="env-testing">
+  <main class="page">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Universidad de La Salle</p>
+        <h1>Formulario de contacto La Salle</h1>
+        <p>Aplicación web académica para demostrar ejecución controlada en desarrollo, pruebas y producción.</p>
+      </div>
+      <span class="badge">TESTING</span>
+    </section>
+    <section class="debug-box" aria-label="Información de depuración"><strong>Modo depuración activo</strong><br>Ambiente: testing<br>Almacenamiento: /tmp/pytest-of-root/pytest-2/test_S02_error_correo_conserva0/contactos_testing.db<br>Datos identificables: Datos de prueba: TEST-LASALLE-001</section>
+    
+    <section class="card">
+      <h2>Enviar mensaje</h2>
+      <form method="post" action="/" novalidate="">
+        <label for="nombre">Nombre completo</label>
+        <input id="nombre" type="text" name="nombre" value="Estudiante Prueba" maxlength="100" autocomplete="name" required="" style="">
+        
+
+        <label for="correo">Correo electrónico</label>
+        <input id="correo" type="email" name="correo" value="correo-invalido" maxlength="254" autocomplete="email" required="" aria-invalid="true" aria-describedby="error-correo" style="">
+        <small class="error" id="error-correo" role="alert">Ingrese un correo electrónico válido.</small>
+
+        <label for="asunto">Asunto</label>
+        <input id="asunto" type="text" name="asunto" value="Consulta académica" maxlength="150" autocomplete="off" required="" style="">
+        
+
+        <label for="mensaje">Mensaje</label>
+        <textarea id="mensaje" name="mensaje" rows="5" maxlength="2000" required="" style="">Solicito información del programa.</textarea>
+        
+
+        <button type="submit">Enviar formulario</button>
+      </form>
+    </section>
+  </main>
+
+</body></html>
